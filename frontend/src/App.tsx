@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
-import ContactList from "./components/ContactList";
-import ContactForm from "./components/ContactForm";
-import Modal from "./Modal";
-import Avatar from "./components/Avatar";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import NavBar from './components/NavBar';
+import Home from './components/Home';
+import ContactList from './components/ContactList';
+import AIChat from './components/AIChat';
+import ContactForm from './components/ContactForm';
+import Modal from './components/Modal';
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -14,7 +17,7 @@ function App() {
   }, []);
 
   const fetchContacts = async () => {
-    const response = await fetch("http://127.0.0.1:5000/contacts");
+    const response = await fetch("http://127.0.0.1:5000/contact-book");
     const data = await response.json();
     setContacts(data.contacts);
   };
@@ -36,20 +39,26 @@ function App() {
   };
 
   return (
-    <>
-      <Avatar src="/favicon.ico" size="small" />
-      <ContactList 
-        contacts={contacts} 
-        updateContact={openEditModal} 
-        updateCallback={onUpdate} 
-      />
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/contact-book" element={
+          <ContactList 
+            contacts={contacts} 
+            updateContact={openEditModal} 
+            updateCallback={onUpdate} 
+          />
+        } />
+        <Route path="/ai-chat" element={<AIChat />} />
+      </Routes>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ContactForm 
           existingContact={currentContact} 
           updateCallback={onUpdate} 
         />
       </Modal>
-    </>
+    </Router>
   );
 }
 

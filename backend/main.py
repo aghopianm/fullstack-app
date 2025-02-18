@@ -3,7 +3,7 @@ from config import app, db
 from models import Contact
 
 
-@app.route("/contacts", methods=["GET"])
+@app.route("/contact-book", methods=["GET"])
 def get_contacts():
     contacts = Contact.query.all()
     json_contacts = list(map(lambda x: x.to_json(), contacts))
