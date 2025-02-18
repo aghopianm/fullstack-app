@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import ContactList from "./ContactList";
-import ContactForm from "./ContactForm";
+import ContactList from "./components/ContactList";
+import ContactForm from "./components/ContactForm";
 import Modal from "./Modal";
+import Avatar from "./components/Avatar";
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <>
+      <Avatar src="/favicon.ico" size="small" />
       <ContactList 
         contacts={contacts} 
         updateContact={openEditModal} 
