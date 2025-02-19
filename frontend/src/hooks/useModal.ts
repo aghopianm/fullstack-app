@@ -4,7 +4,7 @@ export const useModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentContact, setCurrentContact] = useState({});
 
-  const openEditModal = (contact) => {
+  const openEditModal = (contact: any) => {
     if (isModalOpen) return;
     setCurrentContact(contact);
     setIsModalOpen(true);

@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import Avatar from "./Avatar"; // Import the Avatar component
 
 const NavBar: React.FC = () => {
   return (
@@ -10,9 +11,7 @@ const NavBar: React.FC = () => {
         <StyledLink to="/contact-book">Contact Book</StyledLink>
         <StyledLink to="/ai-chat">AI Chat Applications</StyledLink>
       </LinkContainer>
-      <AvatarContainer>
-      <Avatar src="/favicon.ico" size="small" alt="Rich Piana" />
-      </AvatarContainer>
+      <Avatar src="/favicon.ico" alt="Rich Piana" /> {/* Use Avatar component */}
     </Nav>
   );
 };
@@ -22,7 +21,7 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #008080;
+  background-color:rgb(0, 183, 255);
   color: white;
 `;
 
@@ -39,17 +38,6 @@ const StyledLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
-`;
-
-const AvatarContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Avatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
 `;
 
 export default NavBar;

@@ -10,23 +10,22 @@ const AvatarContainer = styled.div`
 
 const AvatarWrapper = styled.div`
   display: inline-block;
-  border-radius: ${props => props.round ? '50%' : '8px'};
+  border-radius: 50%;
   overflow: hidden;
   width: ${props => {
     switch(props.size) {
       case 'small': return '32px';
       case 'large': return '96px';
-      default: return '64px';
+      default: return '40px'; // Default size
     }
   }};
   height: ${props => {
     switch(props.size) {
       case 'small': return '32px';
       case 'large': return '96px';
-      default: return '64px';
+      default: return '40px'; // Default size
     }
   }};
-  background-color: ${props => props.backgroundColor || '#e1e1e1'};
 `;
 
 const Image = styled.img`
@@ -35,51 +34,15 @@ const Image = styled.img`
   object-fit: cover;
 `;
 
-const Fallback = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-weight: 500;
-  font-size: ${props => {
-    switch(props.size) {
-      case 'small': return '14px';
-      case 'large': return '32px';
-      default: return '24px';
-    }
-  }};
-`;
-
 const Avatar = ({
   src,
-  alt,
+  alt = 'avatar',
   size = 'medium',
-  round = true,
-  fallbackText,
-  backgroundColor
 }) => {
-  const [hasError, setHasError] = React.useState(false);
-
-  const handleError = () => {
-    setHasError(true);
-  };
-
   return (
     <AvatarContainer>
-      <AvatarWrapper size={size} round={round} backgroundColor={backgroundColor}>
-        {src && !hasError ? (
-          <Image
-            src={src}
-            alt={alt || 'avatar'}
-            onError={handleError}
-          />
-        ) : (
-          <Fallback size={size}>
-            {fallbackText || alt?.charAt(0).toUpperCase() || '?'}
-          </Fallback>
-        )}
+      <AvatarWrapper size={size}>
+        <Image src={src} alt={alt} />
       </AvatarWrapper>
     </AvatarContainer>
   );
