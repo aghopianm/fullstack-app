@@ -1,6 +1,14 @@
+import re
 from flask import request, jsonify
 from config import app, db
 from models import Contact
+from flask_cors import CORS
+
+CORS(app)
+# Email validation function
+def is_valid_email(email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.(com|co\.uk)$'
+    return re.match(pattern, email)
 
 
 @app.route("/contact-book", methods=["GET"])
@@ -16,11 +24,13 @@ def create_contact():
     last_name = request.json.get("lastName")
     email = request.json.get("email")
 
+    # Check if required fields are provided
     if not first_name or not last_name or not email:
-        return (
-            jsonify({"message": "You must include a first name, last name and email"}),
-            400,
-        )
+        return jsonify({"message": "First name, last name, and email are required."}), 400
+
+    # Validate email format
+    if not is_valid_email(email):
+        return jsonify({"message": "Invalid email format. Email must contain '@' and end with '.com' or '.co.uk'."}), 400
 
     new_contact = Contact(first_name=first_name, last_name=last_name, email=email)
     try:
@@ -40,13 +50,19 @@ def update_contact(user_id):
         return jsonify({"message": "User not found"}), 404
 
     data = request.json
+    email = data.get("email", contact.email)
+
+    # Validate email format if it's being updated
+    if email and not is_valid_email(email):
+        return jsonify({"message": "Invalid email format. Email must contain '@' and end with '.com' or '.co.uk'."}), 400
+
     contact.first_name = data.get("firstName", contact.first_name)
     contact.last_name = data.get("lastName", contact.last_name)
-    contact.email = data.get("email", contact.email)
+    contact.email = email
 
     db.session.commit()
 
-    return jsonify({"message": "Usr updated."}), 200
+    return jsonify({"message": "User updated."}), 200
 
 
 @app.route("/delete_contact/<int:user_id>", methods=["DELETE"])

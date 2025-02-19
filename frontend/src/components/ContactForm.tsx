@@ -45,22 +45,29 @@ const SubmitButton = styled.button`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+`;
+
 const ContactForm = ({ existingContact = {}, updateCallback }) => {
     const [firstName, setFirstName] = useState(existingContact.firstName || "");
     const [lastName, setLastName] = useState(existingContact.lastName || "");
     const [email, setEmail] = useState(existingContact.email || "");
+    const [error, setError] = useState(""); // Error message state
 
     const updating = Object.entries(existingContact).length !== 0;
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setError(""); // Clear previous errors
 
         const data = {
             firstName,
             lastName,
             email
         };
-        const url = "http://127.0.0.1:5000/" + (updating ? `update_contact/${existingContact.id}` : "create_contact");
+        const url = `http://127.0.0.1:5000/${updating ? `update_contact/${existingContact.id}` : "create_contact"}`;
         const options = {
             method: updating ? "PATCH" : "POST",
             headers: {
@@ -68,17 +75,24 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
             },
             body: JSON.stringify(data)
         };
-        const response = await fetch(url, options);
-        if (response.status !== 201 && response.status !== 200) {
-            const data = await response.json();
-            alert(data.message);
-        } else {
-            updateCallback();
+
+        try {
+            const response = await fetch(url, options);
+            const responseData = await response.json();
+
+            if (!response.ok) {
+                throw new Error(responseData.message || "An error occurred.");
+            }
+
+            updateCallback(); // Refresh contact list if successful
+        } catch (error) {
+            setError(error.message); // Set the error message from the backend
         }
     };
 
     return (
         <FormContainer onSubmit={onSubmit}>
+            {error && <ErrorMessage>{error}</ErrorMessage>} {/* Display error message */}
             <FormGroup>
                 <Label htmlFor="firstName">First Name:</Label>
                 <Input
@@ -86,6 +100,7 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
                     id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    required
                 />
             </FormGroup>
             <FormGroup>
@@ -95,15 +110,17 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
                     id="lastName"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    required
                 />
             </FormGroup>
             <FormGroup>
                 <Label htmlFor="email">Email:</Label>
                 <Input
-                    type="text"
+                    type="email"
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                 />
             </FormGroup>
             <SubmitButton type="submit">
