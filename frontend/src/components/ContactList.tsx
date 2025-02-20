@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteContact } from "../actions/contactActions";
 
 const Container = styled.div`
   padding: 20px;
@@ -97,60 +99,51 @@ const DeleteButton = styled(ActionButton)`
   }
 `;
 
-const ContactList = ({ contacts, updateContact, updateCallback }) => {
-    const onDelete = async (id) => {
-        try {
-            const options = {
-                method: "DELETE"
-            };
-            const response = await fetch(`http://127.0.0.1:5000/delete_contact/${id}`, options);
-            if (response.status === 200) {
-                updateCallback();
-            } else {
-                console.error("Failed to delete");
-            }
-        } catch (error) {
-            alert(error);
-        }
-    };
+const ContactList = ({ updateContact }) => {
+  const contacts = useSelector((state) => state.contacts.contacts);
+  const dispatch = useDispatch();
 
-    return (
-        <Container>
-            <HeaderContainer>
-                <Title>Contacts</Title>
-                <CreateButton onClick={() => updateContact({})}>
-                    Create New Contact
-                </CreateButton>
-            </HeaderContainer>
-            <Table>
-                <thead>
-                    <tr>
-                        <Th>First Name</Th>
-                        <Th>Last Name</Th>
-                        <Th>Email</Th>
-                        <Th>Actions</Th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {contacts.map((contact) => (
-                        <Tr key={contact.id}>
-                            <Td>{contact.firstName}</Td>
-                            <Td>{contact.lastName}</Td>
-                            <Td>{contact.email}</Td>
-                            <Td>
-                                <UpdateButton onClick={() => updateContact(contact)}>
-                                    Update
-                                </UpdateButton>
-                                <DeleteButton onClick={() => onDelete(contact.id)}>
-                                    Delete
-                                </DeleteButton>
-                            </Td>
-                        </Tr>
-                    ))}
-                </tbody>
-            </Table>
-        </Container>
-    );
+  const onDelete = (id) => {
+    dispatch(deleteContact(id));
+  };
+
+  return (
+    <Container>
+      <HeaderContainer>
+        <Title>Contacts</Title>
+        <CreateButton onClick={() => updateContact({})}>
+          Create New Contact
+        </CreateButton>
+      </HeaderContainer>
+      <Table>
+        <thead>
+          <tr>
+            <Th>First Name</Th>
+            <Th>Last Name</Th>
+            <Th>Email</Th>
+            <Th>Actions</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {contacts.map((contact) => (
+            <Tr key={contact.id}>
+              <Td>{contact.firstName}</Td>
+              <Td>{contact.lastName}</Td>
+              <Td>{contact.email}</Td>
+              <Td>
+                <UpdateButton onClick={() => updateContact(contact)}>
+                  Update
+                </UpdateButton>
+                <DeleteButton onClick={() => onDelete(contact.id)}>
+                  Delete
+                </DeleteButton>
+              </Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
+  );
 };
 
 export default ContactList;

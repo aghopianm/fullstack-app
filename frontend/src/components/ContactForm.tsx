@@ -1,5 +1,7 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { addContact, updateContact } from "../actions/contactActions"
 
 const FormContainer = styled.form`
   max-width: 400px;
@@ -51,83 +53,82 @@ const ErrorMessage = styled.p`
 `;
 
 const ContactForm = ({ existingContact = {}, updateCallback }) => {
-    const [firstName, setFirstName] = useState(existingContact.firstName || "");
-    const [lastName, setLastName] = useState(existingContact.lastName || "");
-    const [email, setEmail] = useState(existingContact.email || "");
-    const [error, setError] = useState(""); // Error message state
+  const [firstName, setFirstName] = useState(existingContact.firstName || "");
+  const [lastName, setLastName] = useState(existingContact.lastName || "");
+  const [email, setEmail] = useState(existingContact.email || "");
+  const [error, setError] = useState(""); // Error message state
 
-    const updating = Object.entries(existingContact).length !== 0;
+  const dispatch = useDispatch();
 
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        setError(""); // Clear previous errors
+  useEffect(() => {
+    setFirstName(existingContact.firstName || "");
+    setLastName(existingContact.lastName || "");
+    setEmail(existingContact.email || "");
+  }, [existingContact]);
 
-        const data = {
-            firstName,
-            lastName,
-            email
-        };
-        const url = `http://127.0.0.1:5000/${updating ? `update_contact/${existingContact.id}` : "create_contact"}`;
-        const options = {
-            method: updating ? "PATCH" : "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        };
+  const updating = Object.entries(existingContact).length !== 0;
 
-        try {
-            const response = await fetch(url, options);
-            const responseData = await response.json();
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setError(""); // Clear previous errors
 
-            if (!response.ok) {
-                throw new Error(responseData.message || "An error occurred.");
-            }
-
-            updateCallback(); // Refresh contact list if successful
-        } catch (error) {
-            setError(error.message); // Set the error message from the backend
-        }
+    const contact = {
+      id: existingContact.id || Date.now(),
+      firstName,
+      lastName,
+      email,
     };
 
-    return (
-        <FormContainer onSubmit={onSubmit}>
-            {error && <ErrorMessage>{error}</ErrorMessage>} {/* Display error message */}
-            <FormGroup>
-                <Label htmlFor="firstName">First Name:</Label>
-                <Input
-                    type="text"
-                    id="firstName"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <Label htmlFor="lastName">Last Name:</Label>
-                <Input
-                    type="text"
-                    id="lastName"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <Label htmlFor="email">Email:</Label>
-                <Input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </FormGroup>
-            <SubmitButton type="submit">
-                {updating ? "Update" : "Create"}
-            </SubmitButton>
-        </FormContainer>
-    );
+    try {
+      if (updating) {
+        dispatch(updateContact(contact));
+      } else {
+        dispatch(addContact(contact));
+      }
+      updateCallback(); // Refresh contact list if successful
+    } catch (error) {
+      setError(error.message); // Set the error message from the backend
+    }
+  };
+
+  return (
+    <FormContainer onSubmit={onSubmit}>
+      {error && <ErrorMessage>{error}</ErrorMessage>} {/* Display error message */}
+      <FormGroup>
+        <Label htmlFor="firstName">First Name:</Label>
+        <Input
+          type="text"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="lastName">Last Name:</Label>
+        <Input
+          type="text"
+          id="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="email">Email:</Label>
+        <Input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </FormGroup>
+      <SubmitButton type="submit">
+        {updating ? "Update" : "Create"}
+      </SubmitButton>
+    </FormContainer>
+  );
 };
 
 export default ContactForm;
