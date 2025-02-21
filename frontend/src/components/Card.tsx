@@ -55,7 +55,7 @@ const Card: React.FC<CardProps> = ({ imageSrc, title, link }) => {
       <Image src={imageSrc} alt={title} />
       <Content>
         <Title>{title}</Title>
-        <Stars />
+        <Stars title={title}/>
         <LinkButton href={link} target="_blank" rel="noopener noreferrer">
           Visit
         </LinkButton>

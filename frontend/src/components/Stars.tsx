@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { setRating } from '../actions/starActions';
 
 const StarContainer = styled.div`
   display: flex;
@@ -17,19 +19,24 @@ const Star = styled.span<{ active: boolean }>`
   }
 `;
 
-const Stars: React.FC = () => {
-  const [rating, setRating] = useState<number>(0);
-  const [hover, setHover] = useState<number>(0);
+interface StarsProps {
+  title: string; // Unique identifier for each card
+}
+
+const Stars: React.FC<StarsProps> = ({ title }) => {
+  const dispatch = useDispatch();
+  const rating = useSelector((state) => state.stars[title] || 0);
+  const [hovered, setHovered] = React.useState(0);
 
   return (
     <StarContainer>
       {[1, 2, 3, 4, 5].map((star) => (
         <Star
           key={star}
-          active={star <= (hover || rating)}
-          onClick={() => setRating(star)}
-          onMouseEnter={() => setHover(star)}
-          onMouseLeave={() => setHover(0)}
+          active={star <= (hovered || rating)}
+          onClick={() => dispatch(setRating(title, star))}
+          onMouseEnter={() => setHovered(star)}
+          onMouseLeave={() => setHovered(0)}
         >
           ★
         </Star>
