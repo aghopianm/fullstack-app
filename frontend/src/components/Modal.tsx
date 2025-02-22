@@ -40,8 +40,14 @@ const CloseButton = styled.button`
   }
 `;
 
-const Modal = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode; // Children can be any valid React node
+}
+
+function Modal({ isOpen, onClose, children }: ModalProps) {
+  if (!isOpen) return null; // If the modal is not open, return null
 
   return (
     <ModalOverlay>
@@ -51,6 +57,6 @@ const Modal = ({ isOpen, onClose, children }) => {
       </ModalContent>
     </ModalOverlay>
   );
-};
+}
 
 export default Modal;

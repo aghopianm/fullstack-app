@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Card from './Card';
 import styled from 'styled-components';
 
@@ -10,7 +10,7 @@ const CardGrid = styled.div`
   padding: 16px; /* Optional padding around the grid */
 `;
 
-const App: React.FC = () => {
+function AIChat(){
   return (
     <div>
       <h1>AI App Ratings</h1>
@@ -45,4 +45,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default AIChat;

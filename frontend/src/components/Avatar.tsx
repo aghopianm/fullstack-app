@@ -1,4 +1,4 @@
-import React from 'react';
+
 import styled from 'styled-components';
 
 const AvatarContainer = styled.div`
@@ -34,11 +34,13 @@ const Image = styled.img`
   object-fit: cover;
 `;
 
-const Avatar = ({
-  src,
-  alt = 'avatar',
-  size = 'medium',
-}) => {
+interface AvatarProps {
+  src: string;
+  alt?: string; // Optional prop
+  size?: 'small' | 'medium' | 'large'; // Define allowed sizes
+}
+
+function Avatar({ src, alt = 'avatar', size = 'medium' }: AvatarProps) {
   return (
     <AvatarContainer>
       <AvatarWrapper size={size}>

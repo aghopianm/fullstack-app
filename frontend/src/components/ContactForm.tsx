@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { addContact, updateContact } from "../actions/contactActions"
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { addContact, updateContact } from '../actions/contactActions';
 
+// Styled components
 const FormContainer = styled.form`
   max-width: 400px;
   padding: 20px;
@@ -52,7 +53,18 @@ const ErrorMessage = styled.p`
   font-size: 14px;
 `;
 
-const ContactForm = ({ existingContact = {}, updateCallback }) => {
+// Interface for props
+interface ContactFormProps {
+  existingContact?: {
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+  };
+  updateCallback: () => void;
+}
+
+function ContactForm({ existingContact = {}, updateCallback }: ContactFormProps) {
   const [firstName, setFirstName] = useState(existingContact.firstName || "");
   const [lastName, setLastName] = useState(existingContact.lastName || "");
   const [email, setEmail] = useState(existingContact.email || "");
@@ -68,7 +80,7 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
 
   const updating = Object.entries(existingContact).length !== 0;
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); // Clear previous errors
 
@@ -86,7 +98,7 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
         dispatch(addContact(contact));
       }
       updateCallback(); // Refresh contact list if successful
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message); // Set the error message from the backend
     }
   };
@@ -129,6 +141,6 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
       </SubmitButton>
     </FormContainer>
   );
-};
+}
 
 export default ContactForm;

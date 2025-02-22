@@ -1,4 +1,4 @@
-import React from 'react';
+
 import styled from 'styled-components';
 import Stars from './Stars'; // Import the Stars component
 
@@ -49,7 +49,7 @@ interface CardProps {
   link: string;
 }
 
-const Card: React.FC<CardProps> = ({ imageSrc, title, link }) => {
+function Card ({ imageSrc, title, link }: CardProps){
   return (
     <CardContainer>
       <Image src={imageSrc} alt={title} />

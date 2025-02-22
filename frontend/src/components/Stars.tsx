@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { setRating } from '../actions/starActions';
@@ -23,10 +23,10 @@ interface StarsProps {
   title: string; // Unique identifier for each card
 }
 
-const Stars: React.FC<StarsProps> = ({ title }) => {
+function Stars({ title }: StarsProps) {
   const dispatch = useDispatch();
-  const rating = useSelector((state) => state.stars[title] || 0);
-  const [hovered, setHovered] = React.useState(0);
+  const rating = useSelector((state: any) => state.stars[title] || 0);
+  const [hovered, setHovered] = useState(0);
 
   return (
     <StarContainer>

@@ -99,11 +99,16 @@ const DeleteButton = styled(ActionButton)`
   }
 `;
 
-const ContactList = ({ updateContact }) => {
-  const contacts = useSelector((state) => state.contacts.contacts);
+// Interface for props
+interface ContactListProps {
+  updateContact: (contact: any) => void; // Define the type of contact as needed
+}
+
+function ContactList({ updateContact }: ContactListProps) {
+  const contacts = useSelector((state: any) => state.contacts.contacts);
   const dispatch = useDispatch();
 
-  const onDelete = (id) => {
+  const onDelete = (id: number) => {
     dispatch(deleteContact(id));
   };
 
@@ -144,6 +149,6 @@ const ContactList = ({ updateContact }) => {
       </Table>
     </Container>
   );
-};
+}
 
 export default ContactList;

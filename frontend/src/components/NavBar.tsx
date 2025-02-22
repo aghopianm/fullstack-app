@@ -1,20 +1,8 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Avatar from "./Avatar"; // Import the Avatar component
 
-const NavBar: React.FC = () => {
-  return (
-    <Nav>
-      <LinkContainer>
-        <StyledLink to="/">Home</StyledLink>
-        <StyledLink to="/contact-book">Contact Book</StyledLink>
-        <StyledLink to="/ai-chat">AI Chat Applications</StyledLink>
-      </LinkContainer>
-      <Avatar src="/favicon.ico" alt="Rich Piana" /> {/* Use Avatar component */}
-    </Nav>
-  );
-};
 
 const Nav = styled.nav`
   display: flex;
@@ -39,5 +27,18 @@ const StyledLink = styled(Link)`
     text-decoration: underline;
   }
 `;
+
+function NavBar() {
+  return (
+    <Nav>
+      <LinkContainer>
+        <StyledLink to="/">Home</StyledLink>
+        <StyledLink to="/contact-book">Contact Book</StyledLink>
+        <StyledLink to="/ai-chat">AI Chat Applications</StyledLink>
+      </LinkContainer>
+      <Avatar src="/favicon.ico" alt="Rich Piana" /> {/* Use Avatar component */}
+    </Nav>
+  );
+}
 
 export default NavBar;
